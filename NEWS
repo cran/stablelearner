@@ -1,0 +1,10 @@
+Changes in Version 0.1-1
+
+  o project stablelearner has been launched and a stable version of the 
+    package has been uploaded to CRAN.
+  
+  o stability() is available to estimate the stability of the result s
+    from a given supervised statistical learning method.
+	
+  o stabletree() is available to estimate the stability of the results
+    from recursive partitioning.

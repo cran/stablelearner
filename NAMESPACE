@@ -1,0 +1,73 @@
+import("partykit", "graphics")
+
+importFrom("e1071", 
+           "classAgreement")
+
+importFrom("MASS", 
+           "mvrnorm")
+
+importFrom("grDevices", 
+           "gray.colors", "n2mfrow")
+
+importFrom("methods", 
+           "formalArgs")
+  
+importFrom("stats", 
+           "cor", "formula", "na.exclude", "plogis", "quantile", "rbinom", 
+           "toeplitz", "var", "getCall", "model.frame", "na.omit", "terms", 
+           "update", "predict")
+
+importFrom("parallel", 
+           "mclapply")
+
+export(
+  ## stability assessment
+  "stabletree",
+  ".stabEnv",
+  "stability",
+  "stab_control",
+  "accuracy",
+  "tuner",
+
+  ## adding new learners
+  "addLearner",
+  "getLearner",
+  "LearnerList",
+
+  ## utiltiy functions
+  "similarity_values",
+
+  ## data-generating function
+  "dgp_twoclass",
+  
+  ## similarity and dissimilarity measures
+  "clagree", "ckappa", "bdist", "tvdist", "hdist", "jsdiv",
+  "edist", "msdist", "rmsdist", "madist", "qadist", "cprob", "ccc", "pcc", "cosine", "rbfkernel", "tanimoto",
+
+  ## sampler convenience functions
+  "bootstrap",
+  "subsampling",
+  "samplesplitting",
+  "jackknife",
+  "splithalf"
+
+)
+
+S3method("getCall", "cforest")
+
+S3method("barplot", "stabletree")
+S3method("image", "stabletree")
+S3method("plot", "stabletree")
+S3method("print", "stabletree")
+S3method("summary", "stabletree")
+S3method("print", "summary.stabletree")
+
+S3method("print", "stablelearner")
+S3method("summary", "stablelearner")
+S3method("boxplot", "stablelearner")
+
+S3method("print", "stablelearnerList")
+S3method("summary", "stablelearnerList")
+S3method("print", "summary.stablelearnerList")
+S3method("boxplot", "stablelearnerList")
+
