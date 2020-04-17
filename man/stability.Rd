@@ -25,7 +25,7 @@
   \item{\ldots}{additional fitted model objects.}
   \item{data}{an optional \code{data.frame} or a data-generating function. By 
     default the learning data from \code{x} is used (if this can be inferred 
-    from the \code{\link[stats]{getCall}} of \code{x}.}
+    from the \code{\link{getCall}} of \code{x}.}
   \item{control}{a list with control parameters, see  \code{\link{stab_control}}.}
   \item{weights}{an optional matrix of dimension n * B that can be used to 
     weight the observations from the original learning data when the models 
@@ -34,18 +34,18 @@
     \code{weight = NULL} (default), no case-weights are used and the 
     \code{sampler} defined in \code{control} will be applied to the original 
     data set.}
-  \item{applyfun}{a \code{\link[base]{lapply}}-like function. The default is to use
-    \code{\link[base]{lapply}} unless \code{cores} is specified in which case
-    \code{\link[parallel]{mclapply}} is used (for multicore computations on platforms
+  \item{applyfun}{a \code{\link{lapply}}-like function. The default is to use
+    \code{\link{lapply}} unless \code{cores} is specified in which case
+    \code{\link{mclapply}} is used (for multicore computations on platforms
     that support these).}
   \item{cores}{integer. The number of cores to use in multicore computations
-    using \code{\link[parallel]{mclapply}} (see above).}
+    using \code{\link{mclapply}} (see above).}
   \item{names}{a vector of characters to specify a name for each fitted model 
     object. By default, the objects are named by their class.}
 }
 
 \details{
-  FIXME
+  FIXME:
 }
 
 \value{
@@ -112,4 +112,5 @@ stability(res, data = my_dgp)
 
 }
 
-\keyword{resampling, similarity}
+\keyword{resampling}
+\keyword{similarity}

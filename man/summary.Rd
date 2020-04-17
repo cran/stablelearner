@@ -24,7 +24,7 @@
     such that higher values indicate a higher stability.}
   \item{digits}{integer. The number of digits used to summarize the similarity 
     distribution in the \code{summary} output.}
-  \item{probs}{a vector of probabilities used to summarize the similarity 
+  \item{probs}{a vector of probabilities used tosummarize the similarity 
     distribution in the \code{summary} output.}
   \item{names}{a vector of characters to specify a name for each result from 
     statistical learning in the \code{summary} output.}
@@ -50,4 +50,5 @@ summary(stab, names = "conditional inference tree")
 
 }
 
-\keyword{resampling, similarity}
+\keyword{resampling}
+\keyword{similarity}

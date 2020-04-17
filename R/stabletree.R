@@ -2,7 +2,7 @@
 
 .stabEnv <- new.env()
 
-stabletree <- function(x, data = NULL, sampler = bootstrap, weights = NULL, 
+stabletree <- function(x, data = NULL, sampler = subsampling, weights = NULL, 
   applyfun = NULL, cores = NULL, savetrees = FALSE, ...)
 {
   
@@ -11,8 +11,8 @@ stabletree <- function(x, data = NULL, sampler = bootstrap, weights = NULL,
     sampler <- get(sampler, mode = "function", envir = parent.frame())
   if (is.function(sampler)) {
     samp <- try(sampler(...), silent = TRUE)
-    if (!inherits(samp, "try-error") && is.list(samp) && c("method", "sampler") %in% 
-      names(samp)) {
+    if (!inherits(samp, "try-error") && is.list(samp) & all(c("method", "sampler") %in% 
+      names(samp))) {
       sampler <- samp
     } else {
       sampler <- list(method = "User-defined", sampler = sampler)
@@ -86,7 +86,7 @@ stabletree <- function(x, data = NULL, sampler = bootstrap, weights = NULL,
   }
 
   ## bootstrap trees (and omit data copy from tree)
-  xx <- applyfun(1L:B, function(i) {
+  xx <- applyfun(seq_len(B), function(i) {
 
     if(is.null(data)) {
       if(is.null(weights)) wix <- apply(bix, 2L, tabulate, nbins = n)
@@ -115,7 +115,8 @@ stabletree <- function(x, data = NULL, sampler = bootstrap, weights = NULL,
   mf <- model.frame(tr, data = data)
   yi <- attr(tr, "response")
   x_classes <- sapply(mf[, -yi, drop = FALSE], function(x) class(x)[1])
-  x_levels  <- sapply(mf[, -yi, drop = FALSE], levels)
+  #x_levels <- sapply(mf[, -yi, drop = FALSE], levels)
+  x_levels <- sapply(mf[, -yi, drop = FALSE], levels, simplify = FALSE)
   x_nlevels <- sapply(mf[, -yi, drop = FALSE], nlevels)
   x_names   <- names(mf[-yi])
 
@@ -168,9 +169,11 @@ stabletree <- function(x, data = NULL, sampler = bootstrap, weights = NULL,
         if (is.null(brs[[n]])) {
           ans <- do.call("rbind", ids)
           if (!is.null(ans)) {
-          rownames(ans) <- NULL
-          colnames(ans) <- x_levels[[n]]
-          # colnames(ans) <- levels(mf[, n])
+            rownames(ans) <- NULL
+            ## sometimes the following fails for weird reasons, see also below
+            tmp <- try(colnames(ans) <- x_levels[[n]], silent = TRUE)
+            if(class(tmp) == "try-error") class(ans) <- "try-error"
+            # colnames(ans) <- levels(mf[, n])
           }
         } else {
           ans <- unlist(brs)
@@ -190,7 +193,7 @@ stabletree <- function(x, data = NULL, sampler = bootstrap, weights = NULL,
       br <- x[[n]]
       if (!is.null(br)) {
         if (x_classes[n] == "ordered") {
-          br <- ordered(br, levels = 1L:x_nlevels[[n]], labels = x_levels[[n]])
+          br <- ordered(br, levels = seq_len(x_nlevels[[n]]), labels = x_levels[[n]])
           # br <- ordered(br, levels = 1L:nlevels(mf[, n]), labels = levels(mf[, n]))
         }
         br
@@ -244,6 +247,15 @@ stabletree <- function(x, data = NULL, sampler = bootstrap, weights = NULL,
 
   ## breakpoints
   br <- applyfun(xx, FUN = extract_breaks)
+  ## weird internal error handling
+  ## if some errors occured within extract_split, extract_varid_, or extract_breaks
+  ## drop these resamples from vs and br
+  tmp <- which(sapply(br, function(x) any(sapply(x, class) == "try-error")))
+  if(length(tmp)) {
+    vi_mat <- vi_mat[-tmp, ]
+    br[tmp] <- NULL
+    warning("Due to internal coercion errors, only the results of ", B - length(tmp), "resamples are returned.")
+  }
   br <- lapply(x_names, function(n) {
     if (x_classes[n] == "factor") {
       do.call("rbind", lapply(br, "[[", n))
@@ -252,11 +264,11 @@ stabletree <- function(x, data = NULL, sampler = bootstrap, weights = NULL,
     }
   })
   names(br) <- x_names
-  
+
   ## collect observed and bootstrapped results
   rval <- list(
     call = call,
-    B = B,
+    B = B - length(tmp),
     sampler = sampler,
     vs0 = extract_varid(x), 
     br0 = extract_splitinfo(x),
@@ -283,7 +295,8 @@ print.stabletree <- function(x, ...)
   cat("\n")
 }
 
-summary.stabletree <- function(object, show.breaks = FALSE, digits = 3, ...)
+summary.stabletree <- function(object, show.breaks = FALSE, digits = 3,
+  original = TRUE, ...)
 {
   ans <- list()
   ans$B <- object$B
@@ -322,6 +335,10 @@ summary.stabletree <- function(object, show.breaks = FALSE, digits = 3, ...)
   }
 
   class(ans) <- "summary.stabletree"
+  if(!original) {
+    ans$vstab <- ans$vstab[, - c(2, 4)]
+  }
+  attr(ans, "original") <- original
   ans
 }
 
@@ -334,7 +351,9 @@ print.summary.stabletree <- function(x, ...)
   cat("Method =", x$method)
   cat("\n\nVariable selection overview:\n\n")
   print(x$vstab)
-  cat("(* = original tree)\n")
+  if(attr(x, "original")) {
+    cat("(* = original tree)\n")
+  }
   if (!is.null(x$br)) {
     cat("\n\n")
     print(x$br)
@@ -347,8 +366,17 @@ barplot.stabletree <- function(height, main = "Variable selection frequencies",
   xlab = "", ylab = "Relative frequency (in %)", horiz = FALSE, col = gray.colors(2),
   names.arg = NULL, names.uline = TRUE, names.diag = TRUE,
   cex.names = 0.9, 
-  ylim = if (horiz) NULL else c(0, 100), xlim = if (horiz) c(0, 100) else NULL, ...)
+  ylim = if (horiz) NULL else c(0, 100), xlim = if (horiz) c(0, 100) else NULL,
+  original = TRUE, ...)
 {
+
+  ## switch heighlighting of original tree info off if requested
+  if(!original) {
+    height$vs0 <- height$vs0 - height$vs0
+      for(var in names(height$br0)) {
+      height$br0[var] <- list(NULL)
+    }
+  }
 
   vsp <- colMeans(height$vs)
   ord <- order(vsp, decreasing = TRUE)
@@ -374,10 +402,6 @@ barplot.stabletree <- function(height, main = "Variable selection frequencies",
     NA else labs, horiz = horiz, ylim = ylim, xlim = xlim, cex.names = cex.names, main = main, 
     xlab = xlab, ylab = ylab, axes = FALSE, las = ifelse(horiz, 2, 1))
 
-    b <- barplot(vsp, col = col[1L + (vs0 < 1)], names.arg = if (names.diag & !horiz) 
-    NA else labs, horiz = horiz, ylim = ylim, xlim = xlim, cex.names = cex.names, main = main, 
-    xlab = xlab, ylab = ylab, axes = FALSE, las = ifelse(horiz, 2, 1), ...)
-  
   if (horiz) {
   axis(1)
   } else {
@@ -407,8 +431,15 @@ image.stabletree <- function(x, main = "Variable selections",
   names.arg = NULL, names.uline = TRUE, names.diag = TRUE, 
   cex.names = 0.9, xaxs = "i", yaxs = "i",
   col.tree = 2, lty.tree = 2,
-  xlim = c(0, length(x$vs0)), ylim = c(0, x$B), ...)
+  xlim = c(0, length(x$vs0)), ylim = c(0, x$B), original = TRUE, ...)
 {
+
+  if(!original) {
+    x$vs0 <- x$vs0 - x$vs0
+      for(var in names(x$br0)) {
+      x$br0[var] <- list(NULL)
+    }
+  }
 
   ord <- ordermat(x$vs)
   z <- 1L - ord$x
@@ -419,7 +450,7 @@ image.stabletree <- function(x, main = "Variable selections",
   plot(xlim, ylim, xlim = xlim, ylim = ylim, type = "n", axes = FALSE, xaxs = xaxs, 
     yaxs = yaxs, xlab = xlab, ylab = ylab, main = main, ...)
 
-  sapply(1:nc, function(j) {
+  sapply(seq_len(nc), function(j) {
     r <- rle(z[, j])
     y <- c(0, cumsum(r$lengths), x$B)
     sapply(2:length(y), function(k) rect(j - 1, y[k - 1], j, y[k], col = col[r$values[k - 
@@ -460,8 +491,16 @@ image.stabletree <- function(x, main = "Variable selections",
 plot.stabletree <- function(x, select = order(colMeans(x$vs), decreasing = TRUE), 
   type.breaks = "levels", col.breaks = "red", lty.breaks = "dashed", cex.breaks = 0.7, 
   col.main = c("black", "gray50"), main.uline = TRUE, args.numeric = NULL, args.factor = NULL, 
-  args.ordered = NULL, main = NULL, ...)
+  args.ordered = NULL, main = NULL, original = TRUE, ...)
 {
+
+  if(!original) {
+    x$vs0 <- x$vs0 - x$vs0
+      for(var in names(x$br0)) {
+      x$br0[var] <- list(NULL)
+    }
+  }
+
   br <- x$br
   cl <- x$classes
   if (is.character(select)) 
@@ -521,10 +560,10 @@ ordermat <- function(x, order.rows = TRUE, order.cols = TRUE)
 {
   if (order.cols) {
     colind <- order(colMeans(x, na.rm = TRUE), decreasing = TRUE)
-  } else colind <- 1:ncol(x)
+  } else colind <- seq_len(ncol(x))
   if (order.rows) {
     rowind <- order(apply(x[, colind, drop = FALSE], 1, paste0, collapse = ""), decreasing = TRUE)
-  } else rowind <- 1:nrow(x)
+  } else rowind <- seq_len(nrow(x))
   return(list(x = x[rowind, colind, drop = FALSE], rowind = rowind, colind = colind))
 }
 
@@ -599,7 +638,7 @@ breaks_image <- function(bri, br0 = NULL, tx0 = NULL, B = NULL, ylab = "Repetiti
   plot(xlim, ylim, xlim = xlim, ylim = ylim, type = "n", axes = FALSE, 
        xaxs = xaxs, yaxs = yaxs, xlab = xlab, ylab = ylab, ...)
   
-  sapply(1:nc, function(j) {
+  sapply(seq_len(nc), function(j) {
     r <- rle(z[, j])
     y <- c(0, cumsum(r$lengths), B)
     sapply(2:length(y), function(k) rect(j - 1, y[k - 1], j, y[k], col = col[r$values[k - 1] + 1], border = NA))
@@ -618,7 +657,7 @@ breaks_image <- function(bri, br0 = NULL, tx0 = NULL, B = NULL, ylab = "Repetiti
       tx0 <- rownames(br0)
     tx0 <- tapply(tx0, rownames(br0), paste0, collapse = "\n")
     br0 <- unique(br0)
-    sapply(seq(nrow(br0)), function(i) {
+    sapply(seq_len(nrow(br0)), function(i) {
       eq <- rownames(z) %in% rownames(br0)[i] + 0L
       yy <- which(abs(diff(c(0, eq, 0))) > 0) - 1
       abline(h = yy, col = col.breaks, lty = lty.breaks)

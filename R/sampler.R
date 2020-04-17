@@ -9,7 +9,7 @@ bootstrap <- function(B = 500, v = 1) {
 #   list(method = "Bootstrap sampling", sampler = sampfun)
 # }
 
-subsampling <- function(B = 500, v = 0.8) {
+subsampling <- function(B = 500, v = 0.632) {
   sampfun <- function(n) replicate(B, sample(1L:n, floor(v * n), replace = FALSE))
   list(method = paste0("Subsampling with ", sprintf("%1.1f", 100 * v, 2), "% data"), 
     sampler = sampfun)

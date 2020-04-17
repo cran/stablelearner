@@ -40,4 +40,5 @@
 
 \examples{dgp_twoclass(n = 200, p = 6, noise = 4)}
 
-\keyword{resampling, similarity}
+\keyword{resampling}
+\keyword{similarity}

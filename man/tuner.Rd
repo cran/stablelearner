@@ -55,4 +55,5 @@ attr(r, "range")
 
 }
 
-\keyword{resampling, similarity}
+\keyword{resampling}
+\keyword{similarity}

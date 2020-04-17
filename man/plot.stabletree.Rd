@@ -15,25 +15,27 @@
   type.breaks = "levels", col.breaks = "red", lty.breaks = "dashed",
   cex.breaks = 0.7,  col.main = c("black", "gray50"), main.uline = TRUE,
   args.numeric = NULL, args.factor = NULL, args.ordered = NULL, main = NULL,
-  \dots)
+  original = TRUE, \dots)
 
 \method{barplot}{stabletree}(height, main = "Variable selection frequencies",
   xlab = "", ylab = "", horiz = FALSE, col = gray.colors(2),
   names.arg = NULL, names.uline = TRUE, names.diag = TRUE,
   cex.names = 0.9, 
   ylim = if (horiz) NULL else c(0, 100), xlim = if (horiz) c(0, 100) else NULL,
-  \dots)
+  original = TRUE, \dots)
 
 \method{image}{stabletree}(x, main = "Variable selections",
   ylab = "Repetitions", xlab = "", col = gray.colors(2),
   names.arg = NULL, names.uline = TRUE, names.diag = TRUE, 
   cex.names = 0.9, xaxs = "i", yaxs = "i",
   col.tree = 2, lty.tree = 2, xlim = c(0, length(x$vs0)), ylim = c(0, x$B),
-  \dots)
+  original = TRUE, \dots)
 }
 
 \arguments{
   \item{x, height}{an object of class \code{\link{stabletree}}.}
+  \item{original}{logical. Should the original tree information be 
+  highlighted?}
   \item{select}{An vector of integer or character values representing the 
   number(s) or the name(s) of the variable(s) to be plotted. By default all 
   variables are plotted. The numbers correspond to the ordering of all 
@@ -44,7 +46,7 @@
   \code{type.breaks = "levels"} adds the level of the splits.
   \code{type.breaks = "nodeids"} adds the nodeid of the splits.
   \code{type.breaks = "breaks"} adds the cutpoint of the splits.
-  \code{type.breaks = "none"} suppresses any labelling.}
+  \code{type.breaks = "none"} suppresses any labeling.}
   \item{col.breaks}{Coloring of the lines and the texts that represent the 
   splits in the complete data tree.}
   \item{lty.breaks}{Type of the lines that represent the splits in the complete 
@@ -57,7 +59,7 @@
   data tree.}
   \item{main.uline}{A logical value. If \code{TRUE}, variables selected in the 
   complete data tree are underlined. If \code{FALSE}, underlining is 
-  surpressed.}
+  suppressed.}
   \item{args.numeric}{A list of arguments passed to the internal function 
   that is used for plotting a histogram of the cutpoints in numerical splits.
   \code{breaks} is passed to \code{hist} (see \code{\link{hist}} for details). 
@@ -97,11 +99,16 @@
   \item{xlim, ylim}{The limits of the plot.}
   \item{xaxs, yaxs}{The style of axis interval calculation to be used (see 
     \code{\link{par}} for details).}
-  \item{col.tree, lty.tree}{FIXME}
+  \item{col.tree, lty.tree}{color and line type to indicate differences from
+    the original tree that was resampled.}
 }
 
 \details{
-  FIXME
+  \itemize{
+    \item{\code{plot} visualizes the variability of the cutpoints.}
+    \item{\code{barplot} visualizes the variable selection frequency.}
+    \item{\code{image} visualizes the combinations of variables selected.}
+  }
 }
 
 \seealso{\code{\link{stabletree}}}

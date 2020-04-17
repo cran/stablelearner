@@ -29,4 +29,6 @@ getLearner(m)
 }
 }
 
-\keyword{stability, similarity, resampling}
+\keyword{stability}
+\keyword{similarity}
+\keyword{resampling}

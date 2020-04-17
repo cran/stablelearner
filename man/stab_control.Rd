@@ -129,4 +129,5 @@ stability(res, control = stab_control(sampler = splithalf, evaluate = "OOS"))
 
 }
 
-\keyword{resampling, similarity}
+\keyword{resampling}
+\keyword{similarity}

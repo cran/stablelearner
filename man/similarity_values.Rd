@@ -35,4 +35,5 @@ similarity_values(stab)
 }
 }
 
-\keyword{resampling, similarity}
+\keyword{resampling}
+\keyword{similarity}

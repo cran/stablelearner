@@ -206,7 +206,7 @@ stability_internal <- function(x, learner, data, weights, control,
   # if(!is.null(weights)&!wsup) stop("Weights not supported by the learner! Please use sampler argument instead.")
   
   # call <- getCall(x)
-  # if (is.null(data)) data <- eval(call$data, parent.frame())  #FIXME# more elegant default?
+  # if (is.null(data)) data <- eval(call$data, parent.frame())  #FIXME: more elegant default?
   # n <- nrow(data)
   
   ## get envoronment of x

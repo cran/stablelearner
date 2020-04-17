@@ -29,11 +29,11 @@
 	of the results containing \code{NAs}. The default function is 
 	\code{\link{na.exclude}}.}
   \item{applyfun}{a \code{\link[base]{lapply}}-like function. The default is to use
-    \code{\link[base]{lapply}} unless \code{cores} is specified in which case
-    \code{\link[parallel]{mclapply}} is used (for multicore computations on platforms
+    \code{\link{lapply}} unless \code{cores} is specified in which case
+    \code{\link{mclapply}} is used (for multicore computations on platforms
     that support these).}
   \item{cores}{integer. The number of cores to use in multicore computations
-    using \code{\link[parallel]{mclapply}} (see above).}
+    using \code{\link{mclapply}} (see above).}
 }
 
 \details{
@@ -59,4 +59,5 @@ accuracy(stab)
 
 }
 
-\keyword{resampling, similarity}
+\keyword{resampling}
+\keyword{similarity}

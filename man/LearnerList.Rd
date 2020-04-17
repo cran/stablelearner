@@ -28,4 +28,5 @@ see \code{\link{addLearner}}.
 
 \seealso{\code{\link{addLearner}}}
 
-\keyword{resampling, similarity}
+\keyword{resampling}
+\keyword{similarity}

@@ -133,4 +133,6 @@ m$measure(p1, p2)
 
 }
 
-\keyword{stability, similariy, measures}
+\keyword{stability}
+\keyword{similariy}
+\keyword{measures}

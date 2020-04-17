@@ -14,7 +14,7 @@
 
 \usage{
   bootstrap(B = 500, v = 1)
-  subsampling(B = 500, v = 0.8)
+  subsampling(B = 500, v = 0.632)
   samplesplitting(k = 5)
   jackknife(d = 1, maxrep = 5000)
   splithalf(B = 500)

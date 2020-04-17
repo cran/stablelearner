@@ -10,15 +10,23 @@ importFrom("grDevices",
            "gray.colors", "n2mfrow")
 
 importFrom("methods", 
-           "formalArgs")
+           "formalArgs", "new")
   
 importFrom("stats", 
            "cor", "formula", "na.exclude", "plogis", "quantile", "rbinom", 
            "toeplitz", "var", "getCall", "model.frame", "na.omit", "terms", 
-           "update", "predict")
+           "update", "predict", "as.formula", "terms.formula")
 
 importFrom("parallel", 
            "mclapply")
+
+importFrom("randomForest",
+           "getTree")
+
+importFrom("ranger",
+           "treeInfo")
+
+importClassesFrom("party", "RandomForest")
 
 export(
   ## stability assessment
@@ -49,8 +57,10 @@ export(
   "subsampling",
   "samplesplitting",
   "jackknife",
-  "splithalf"
+  "splithalf",
 
+  ## stabletree coercion generic
+  "as.stabletree"
 )
 
 S3method("getCall", "cforest")
@@ -70,4 +80,10 @@ S3method("print", "stablelearnerList")
 S3method("summary", "stablelearnerList")
 S3method("print", "summary.stablelearnerList")
 S3method("boxplot", "stablelearnerList")
+
+S3method("as.stabletree", "randomForest")
+S3method("as.stabletree", "cforest")
+S3method("as.stabletree", "ranger")
+
+exportMethods(as.stabletree)
 
