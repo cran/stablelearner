@@ -8,25 +8,25 @@ vignette: >
   %\VignetteIndexEntry{Variable Selection and Cutpoint Analysis of Random Forests}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteKeywords{random forests, variable selection, cutpoint selection, partition}
-  %\VignetteDepends{stablelearner,partykit,party,randomForest}
+  %\VignetteDepends{stablelearner,partykit,party,randomForest,rchallenge}
   %\VignetteEncoding{UTF-8}
 ---
 
 Random forests are a widely used ensemble learning method for classification or
-regression tasks, however, they are typically used as a black box prediction
+regression tasks. However, they are typically used as a black box prediction
 method that offers only little insight into their inner workings.
 
 In this vignette, we illustrate how the `stablelearner` package can be used to
 gain insight into this black box by visualizing and summarizing the variable
 and cutpoint selection of the trees within a random forest.
 
-Recall that, in simple terms, a random forest is a tree ensemble and the forest
-is grown by resampling the training data and refitting trees on the resampled
-data. Contrary to bagging, random forests have the restriction that the number
-of feature variables randomly sampled as candidates at each node of a tree (in
-implementations, this is typically called the `mtry` argument) is smaller than
-the total number of feature variables available. Random forests were introduced
-by @Breiman2001.
+Recall that, in simple terms, a random forest is a tree ensemble, and the
+forest is grown by resampling the training data and refitting trees on the
+resampled data. Contrary to bagging, random forests have the restriction that
+the number of feature variables randomly sampled as candidates at each node of
+a tree (in implementations, this is typically called the `mtry` argument) is
+smaller than the total number of feature variables available. Random forests
+were introduced by @Breiman2001.
 
 The `stablelearner` package was originally designed to provide functionality
 for assessing the stability of tree learners and other supervised statistical
@@ -35,23 +35,22 @@ measures [@Philipp2018], on the basis of repeatedly resampling the training
 data and refitting the learner.
 
 However, in this vignette we are interested in visualizing the variable and
-cutpoint selection of the trees within a *random forest*. Therefore, contrary
-to the original design of the `stablelearner` package, where the aim was to
-assess the stability of a single original tree, we are not interested in
-highlighting any single tree, because there simply is no *original* tree in a
-random forest and all trees should be treated as equal. As a result, some
-functions will later require to set the argument `original = FALSE`. Moreover,
-this vignette does not cover similarity measures for random forests, which are
-still work in progress.
+cutpoint selection of the trees within a *random forest*. Therefore,
+contrary to the original design of the `stablelearner` package, where the aim
+was to assess the stability of a single original tree, we are not interested in
+highlighting any single tree, but want all trees to be treated as equal. As a
+result, some functions will later require to set the argument `original =
+FALSE`. Moreover, this vignette does not cover similarity measures for random
+forests, which are still work in progress.
 
-In all sections of this vignette, we are going to work with credit data where
-applicants are rated as `"good"` or `"bad"`, which will be introduced in
+In all sections of this vignette, we are going to work with credit scoring data
+where applicants are rated as `"good"` or `"bad"`, which will be introduced in
 Section 1.
 
 In Section 2 we will cover the `stablelearner` package and how to fit a random
 forest using the `stabletree()` function (Section 2.1). In Section 2.2 we show
 how to summarize and visualize the variable and cutpoint selection of the trees
-of a random forest.
+in a random forest.
 
 In the final Section 3, we will demonstrate how the same summary and
 visualizations can be produced when working with random forests that were
@@ -60,35 +59,40 @@ already fitted via the `cforest()` function of the `partykit` package, the
 the `randomForest` package, or the `ranger()` function of the `ranger` package.
 
 Note that in the following, functions will be specified with the double colon
-notation, indicating the package they belong to, i.e.,
-`stablelearner::stabletree()` denoting the `stabletree()` function which
-belongs to the `stablelearner` package.
+notation, indicating the package they belong to, e.g., `partykit::cforest()`
+denoting the `cforest()` function of the `partykit` package, while
+`party::cforest()` denotes the `cforest()` function of the `party` package.
 
 ## 1 Data
 
-In all sections we are going to work with the `GermanCredit` dataset, which is
-included in the `evtree` package:
-```{r, GermanCredit}
-data("GermanCredit", package = "evtree")
+In all sections we are going to work with the `german` dataset, which is
+included in the `rchallenge` package (note that this is a transformed version
+of the German Credit data set with factors instead of dummy variables, and
+corrected as proposed by @Groemping2019.
+
+```{r, german}
+data("german", package = "rchallenge")
 ```
 
 The dataset consists of 1000 observations on 21 variables. For a full
-description of all variables, see `?evtree::GermanCredit`. The random forest we
-are going to fit in this vignette predict whether a person was classified as
+description of all variables, see `?rchallenge::german`. The random forest we
+are going to fit in this vignette predicts whether a person was classified as
 `"good"` or `"bad"` with respect to the `credit_risk` variable using all other
 available variables as feature variables. To allow for a lower runtime we only
 use a subsample of the data (500 persons):
-```{r, GermanCreditstr1}
+
+```{r, germansample}
 set.seed(2409)
-dat <- droplevels(GermanCredit[sample(1000, size = 500), ])
-```
-```{r, GermanCreditstr2, eval = FALSE}
-str(dat)
-```
-```{r, GermanCreditstr3, echo = FALSE}
-str(dat, width = 80, strict.width = "cut")
+dat <- droplevels(german[sample(seq_len(NROW(german)), size = 500), ])
 ```
 
+```{r, germanstr2, eval = FALSE}
+str(dat)
+```
+
+```{r, germanstr3, echo = FALSE}
+str(dat, width = 80, strict.width = "cut")
+```
 
 ## 2 `stablelearner`
 
@@ -97,24 +101,25 @@ str(dat, width = 80, strict.width = "cut")
 In our first approach, we want to grow a random forest directly in
 `stablelearner`. This is possible using conditional inference trees
 [@Hothorn2006] as base learners relying on the function `ctree()` of the
-`partykit` package. This procedure results in a forest similar to a random
-forest fitted via `cforest()` (see `?partykit::cforest`).
+`partykit` package. This procedure results in a forest equal to a random forest
+fitted via `partykit::cforest()`.
 
-To achieve this, we do have to make sure that our initial `ctree`, that will be
+To achieve this, we have to make sure that our initial `ctree`, that will be
 repeatedly refitted on the resampled data, is specified correctly with respect
 to the resampling method and the number of feature variables randomly sampled
 as candidates at each node of a tree (argument `mtry`). By default,
 `partykit::cforest()` uses subsampling with a fraction of `0.632` and sets
-`mtry = ceiling(sqrt(nvar))`. In our `GermanCredit` example, this would be `5`,
-as this dataset includes 20 feature variables. Note that setting `mtry` equal
-to the number of all feature variables available would result in bagging. In a
-real analysis `mtry` should be tune by means of, e.g., cross-validation.
+`mtry = ceiling(sqrt(nvar))`. In our example, this would be `5`, as this
+dataset includes 20 feature variables. Note that setting `mtry` equal to the
+number of all feature variables available would result in bagging. In a real
+analysis `mtry` should be tuned by means of, e.g., cross-validation.
 
 We now fit our initial tree, mimicking the defaults of `partykit::cforest()`
 (see `?partykit::cforest` and `?partykit::ctree_control` for a description of
 the arguments `teststat`, `testtype`, `mincriterion` and `saveinfo`). The
 formula `credit_risk ~ .` simply indicates that we use all remaining variables
 of `dat` as feature variables to predict the `credit_risk` of a person.
+
 ```{r, ctree}
 set.seed(2906)
 ct_partykit <- partykit::ctree(credit_risk ~ ., data = dat,
@@ -126,98 +131,109 @@ We can now proceed to grow our forest based on this initial tree, using
 `stablelearner::stabletree()`. We use subsampling with a fraction of `v =
 0.632` and grow `B = 100` trees. We set `savetrees = TRUE`, to be able to
 extract the individual trees later:
+
 ```{r, stablelearner_cforest}
 set.seed(2907)
-cf_stablelearner <- stablelearner::stabletree(ct_partykit, sampler = stablelearner::subsampling,
-  savetrees = TRUE, B = 100, v = 0.632)
+cf_stablelearner <- stablelearner::stabletree(ct_partykit,
+  sampler = stablelearner::subsampling, savetrees = TRUE, B = 100, v = 0.632)
 ```
 
 Internally, `stablelearner::stabletree()` does the following: For each of the
 100 trees to be generated, the dataset is resampled according to the resampling
 method specified (in our case subsampling with a fraction of `v = 0.632`) and
 the function call of our initial tree (which we labeled `ct_partykit`) is
-updated with respect to this resampled data and reevaluated resulting in a new
+updated with respect to this resampled data and reevaluated, resulting in a new
 tree. All the 100 trees together then build the forest.
 
 ### 2.2 Gaining insight into the forest
 
 The following summary prints the variable selection frequency (`freq`) as well
 as the average number of splits in each variable (`mean`) over all 100 trees.
-As we do *not* want to focus on our initial tree (remember that we just grew a
-forest, where all trees are of equal interest), we set `original = FALSE` as
-already mentioned in the introduction:
+As we do *not* want to focus on our initial tree (remember that we just
+grew a forest, where all trees are of equal interest), we set `original =
+FALSE`, as already mentioned in the introduction:
+
 ```{r, stablelearner_methods}
 summary(cf_stablelearner, original = FALSE)
 ```
-I.e., looking at the `status` variable (status of the existing checking account
-of a person) this variable was selected in all 100 trees (`freq = 1.00`).
-Moreover, this variable was often selected more than a single time for a split
-because the average number of splits is at around 2.50.
 
-Plotting the variable selection frequency is achieved via the following (note
-that `cex.names` allows us to specify the relative font size of the x-axis
-labels): 
-```{r, stablelearner_barplot, fig.height = 4, fig.width = 6}
-barplot(cf_stablelearner, original = FALSE, cex.names = 0.7)
+Looking at the `status` variable (status of the existing checking account of a
+person) for example, this variable was selected in almost all 100 trees (`freq
+= 0.99`). Moreover, this variable was often selected more than once for a
+split because the average number of splits is at around 2.40.
+
+Plotting the variable selection frequency is achieved via the following command
+(note that `cex.names` allows us to specify the relative font size of the
+x-axis labels):
+
+```{r, stablelearner_barplot, fig.height = 4, fig.width = 8}
+barplot(cf_stablelearner, original = FALSE, cex.names = 0.6)
 ```
 
-To get a more detailed view, we can also inspect the variable selections
-partitioned for each tree. The following plot shows us for each variable
+To get a more detailed view, we can also inspect the variable selection
+patterns displayed for each tree. The following plot shows us for each variable
 whether it was selected (colored in darkgrey) in each of the 100 trees within
 the forest, where the variables are ordered on the x-axis so that top ranking
 ones come first:
-```{r, stablelearner_image, fig.height = 4, fig.width = 6}
-image(cf_stablelearner, original = FALSE, cex.names = 0.7)
+
+```{r, stablelearner_image, fig.height = 4, fig.width = 8}
+image(cf_stablelearner, original = FALSE, cex.names = 0.6)
 ```
 
-This may allow for interesting observations, i.e., we observe that whenever
-`duration` was not selected, both `credit_history` and `employment_duration`
-were almost always selected as splitting variables.
+This may allow for interesting observations, e.g., we observe that in those
+trees where `duration` was not selected, both `credit_history` and
+`employment_duration` were almost always selected as splitting variables.
 
 Finally, the `plot()` function allows us to inspect the cutpoints and resulting
 partitions for each variable over all 100 trees. Here we focus on the variables
-`status`, `employment_duration`, and `duration`:
-```{r, stablelearner_plot, fig.height = 12, fig.width = 6}
+`status`, `present_residence`, and `duration`:
+
+```{r, stablelearner_plot, fig.height = 12, fig.width = 8}
 plot(cf_stablelearner, original = FALSE,
-  select = c("status", "employment_duration", "duration"))
+  select = c("status", "present_residence", "duration"))
 ```
 
-Looking at the variable `status` (unordered categorical variable), we are given
-a so called image plot visualizing the partition of this variable. We observe
-that the most frequent partition is `... < 0 DM` and `0 <= ... < 200 DM` vs.
-`... >= 200 DM / salary for at least 1 year` and `no checking account`. The
-light gray color is used when a category was no more represented by the
-observations left for partitioning in the particular node.
+Looking at the first variable `status` (an unordered categorical variable), we
+are given a so called image plot, visualizing the partition of this variable
+for each of the 100 trees.. We observe that the most frequent partition is to
+distinguish between persons with the values `no checking account` and `... < 0
+DM` vs. persons with the values `0 <= ... < 200 DM` and `... >= 200 DM / salary
+for at least 1 year`, but also other partitions occur. The light gray color is
+used when a category was no more represented by the observations left for
+partitioning in the particular node.
 
-For ordered categorical variables such as `employment_duration`, a barplot is
+For ordered categorical variables such as `present_residence`, a barplot is
 given showing the frequency of all possible cutpoints sorted on the x-axis in
 their natural order. Here, the cutpoint between `1 <= ... < 4 years` and `4 <=
-... < 7 years` is selected more than 80 times.
+... < 7 years` is selected most frequently.
 
 Lastly, for numerical variables a histogram is given, showing the distribution
 of cutpoints. We observe that most cutpoints for the variable `duration`
-occurred between 0 and 30, however there appears to be high variance.
+occurred between 0 and 30, but there appears to be high variance, indicating a
+smooth effect of this variable rather than a pattern with a distinct
+change-point.
 
 For a more detailed explanation of the different kinds of plots, Section 3 of
 @Philipp2016 is very helpful.
 
-Concluding, the summary and different plots helped us to gain better insight
-into the variable and cutpoint selection of the 100 trees within our forest.
-Finally, in case we want to extract individual trees, i.e., the first tree, we
-can do this via:
+To conclude, the summary table and different plots helped us to gain some
+insight into the variable and cutpoint selection of the 100 trees within our
+forest. Finally, in case we want to extract individual trees, e.g., the first
+tree, we can do this via:
+
 ```{r, stablelearner_trees, eval = FALSE}
 cf_stablelearner$tree[[1]]
 ```
 
-It should be noted that from a technical and performance-wise aspect, there is
-little reason to grow a forest directly in `stablelearner` as the `cforest()`
-implementations in `partykit` and especially in `party` are more efficient.
-Nevertheless, it should be noted that the approach of growing a forest directly
-in `stablelearner` allows us to be more flexible with respect to, e.g., the
-resampling method, as we could specify any method we want, e.g., bootstrap,
-subsampling, samplesplitting, jackknife, splithalf or even custom samplers. For
-a discussion why subsampling should be preferred over bootstrap sampling, see
-@Strobl2007.
+It should be noted that from a technical and performance-wise perspective,
+there is little reason to grow a forest directly in `stablelearner`, as the
+`cforest()` implementations in `partykit` and especially in `party` are more
+efficient. Nevertheless, it should be noted that the approach of growing a
+forest directly in `stablelearner` allows us to be more flexible with respect
+to, e.g., the resampling method, as we could specify any method we want, e.g.,
+bootstrap, subsampling, samplesplitting, jackknife, splithalf or even custom
+samplers. For a discussion why subsampling should be preferred over bootstrap
+sampling, see @Strobl2007.
 
 ## 3 Working with random forests fitted via other packages
 
@@ -227,96 +243,119 @@ already been fitted via the `cforest()` function of the `partykit` package, the
 the `randomForest` package, or the `ranger()` function of the `ranger` package.
 
 Essentially, we just fit the random forest and then use
-`stablelearner::as.stabletree()` to coerce the forest to a `stabletree` object
+`stablelearner::as.stabletree()` to coerce the forest to a `stabletree` object,
 which allows us to get the same summary and plots as presented above.
 
 Fitting a `cforest` with 100 trees using `partykit` is straightforward:
-```{r, partykit_cforest, eval = FALSE}
+
+```{r, partykit_cforest}
 set.seed(2908)
-cf_partykit <- partykit::cforest(credit_risk ~ ., data = GermanCredit,
+cf_partykit <- partykit::cforest(credit_risk ~ ., data = dat,
   ntree = 100, mtry = 5)
 ```
 
 `stablelearner::as.stabletree()` then allows us to coerce this `cforest` and we
 can produce summaries and plots as above (note that for plotting, we can now
-omit `original = FALSE` as we use a coerced forest):
+omit `original = FALSE`, because the coerced forest has no particular initial
+tree):
+
 ```{r, as.stabletree_partykit, eval = FALSE}
 cf_partykit_st <- stablelearner::as.stabletree(cf_partykit)
 summary(cf_partykit_st, original = FALSE)
-barplot(cf_partykit_st, cex.names = 0.7)
-image(cf_partykit_st, cex.names = 0.7)
-plot(cf_partykit_st, select = c("status", "employment_duration", "duration"))
+barplot(cf_partykit_st)
+image(cf_partykit_st)
+plot(cf_partykit_st, select = c("status", "present_residence", "duration"))
 ```
 
 We do not observe substantial differences compared to growing the forest
 directly in `stablelearner` (of course, this is the expected behavior, because
 we tried to mimic the algorithm of `partykit::cforest()` in the previous
-section).
+section), therefore we will not display the results again.
 
-This procedure described above is analogous for forests fitted via
+Looking at the variable importance as reported by `partykit::varimp()` shows
+substantial overlap, i.e., the variable `status` yields a high importance:
+
+```{r, partykit_varimp}
+partykit::varimp(cf_partykit)
+```
+
+The coercing procedure described above is analogous for forests fitted via
 `party::cforest()`:
+
 ```{r, party_cforest, eval = FALSE}
 set.seed(2909)
 cf_party <- party::cforest(credit_risk ~ ., data = dat,
   control = party::cforest_unbiased(ntree = 100, mtry = 5))
 ```
+
 ```{r, as.stabletree_party, eval = FALSE}
 cf_party_st <- stablelearner::as.stabletree(cf_party)
 summary(cf_party_st, original = FALSE)
-barplot(cf_party_st, cex.names = 0.7)
-image(cf_party_st, cex.names = 0.7)
-plot(cf_party_st, select = c("status", "employment_duration", "duration"))
+barplot(cf_party_st)
+image(cf_party_st)
+plot(cf_party_st, select = c("status", "present_residence", "duration"))
 ```
 
 Again, we do not observe substantial differences compared to
 `partykit::cforest()`. This is the expected behavior, as `partykit::cforest()`
-is a (pure R) reimplementation of `party::cforest()` (C implementation).
+is a (pure R) reimplementation of `party::cforest()` (implemented in C).
 
-For forests fitted via `randomForest::randomForest`, we again can do the same
-as above. However, as these forests are not using conditional inference trees
-as base learners, we can expect some difference with respect to the results:
+For forests fitted via `randomForest::randomForest`, we can do the same as
+above. However, as these forests are not using conditional inference trees as
+base learners, we can expect some difference with respect to the results:
+
 ```{r, randomForest}
 set.seed(2910)
 rf <- randomForest::randomForest(credit_risk ~ ., data = dat,
   ntree = 100, mtry = 5)
 ```
+
 ```{r, as.stabletree_randomForest}
 rf_st <- stablelearner::as.stabletree(rf)
 summary(rf_st, original = FALSE)
 ```
-```{r, rf_barplot, fig.height = 4, fig.width = 6}
-barplot(rf_st, cex.names = 0.7)
+
+```{r, rf_barplot, fig.height = 4, fig.width = 8}
+barplot(rf_st, cex.names = 0.6)
 ```
-```{r, rf_image, fig.height = 4, fig.width = 6}
-image(rf_st, cex.names = 0.7)
+
+```{r, rf_image, fig.height = 4, fig.width = 8}
+image(rf_st, cex.names = 0.6)
 ```
-```{r, rf_plot, fig.height = 12, fig.width = 6}
-plot(rf_st, select = c("status", "employment_duration", "duration"))
+
+```{r, rf_plot, fig.height = 12, fig.width = 8}
+plot(rf_st, select = c("status", "present_residence", "duration"))
 ```
 
 We observe that for numerical variables the average number of splits is much
-higher, i.e., `amount` is selected at an average of around 10 times. This is a
-known drawback of Breiman and Cutler's original random forest algorithm (i.e.,
-the algorithm is biased in splitting with respect to numerical variables),
-which random forests based on conditional inference trees do not share. For
-more details, see @Hothorn2006, @Strobl2007, and @Strobl2009.
+higher now, i.e., `amount` is selected at an average of around 10 times. Their
+preference for variables offering many cutpoints is a known drawback of Breiman
+and Cutler's original Random Forest algorithm, which random forests based on
+conditional inference trees do not share. Note, however, that Breiman and
+Cutler did not intend the variable selection frequencies to be used as a
+measure of the relevance of the predictor variables, but have suggested a
+permutation-based variable importance measure for this purpose. For more
+details, see @Hothorn2006, @Strobl2007, and @Strobl2009.
 
-Finally, for forests fitted via `ranger::ranger()`, the procedure is again the
+Finally, for forests fitted via `ranger::ranger()` (that also implements
+Breiman and Cutler's original algorithm), the coercing procedure is again the
 same:
+
 ```{r, ranger, eval = FALSE}
 set.seed(2911)
 rf_ranger <- ranger::ranger(credit_risk ~ ., data = dat,
   num.trees = 100, mtry = 5)
 ```
+
 ```{r, as.stabletree_ranger, eval = FALSE}
 rf_ranger_st <- stablelearner::as.stabletree(rf_ranger)
 summary(rf_ranger_st, original = FALSE)
-barplot(rf_ranger_st, cex.names = 0.7)
-image(rf_ranger_st, cex.names = 0.7)
-plot(rf_ranger_st, select = c("status", "employment_duration", "duration"))
+barplot(rf_ranger_st)
+image(rf_ranger_st)
+plot(rf_ranger_st, select = c("status", "present_residence", "duration"))
 ```
 
-As a final comment on performance, note that just as
+As a final comment on computational performance, note that just as
 `stablelearner::stabletree()`, `stablelearner::as.stabletree()` allows for
 parallel computation (see the arguments `applyfun` and `cores`). This may be
 helpful when dealing with the coercion of large random forests.

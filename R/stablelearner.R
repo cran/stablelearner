@@ -244,8 +244,7 @@ stability_internal <- function(x, learner, data, weights, control,
     
     ## are weights supported?
     if(!inherits(call, "try-error")) {
-      fitfun <- get(as.character(call[[1L]]), mode = "function", 
-                    envir = asNamespace(learner$package))
+      fitfun <- eval(call[[1L]], envir = asNamespace(learner$package))
       wsup <- "weights" %in% formalArgs(fitfun)
     } else wsup <- FALSE
     

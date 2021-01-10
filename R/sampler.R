@@ -1,6 +1,6 @@
 bootstrap <- function(B = 500, v = 1) {
   sampfun <- function(n) replicate(B, sample(1L:n, floor(v * n), replace = TRUE))
-  list(method = paste0("Bootstrap sampling with ", sprintf("%1.1f", 100 * v, 2), "% data"), 
+  list(method = sprintf("Bootstrap sampling with %1.1f%% data", 100 * v), 
        sampler = sampfun)
 }
 
@@ -11,7 +11,7 @@ bootstrap <- function(B = 500, v = 1) {
 
 subsampling <- function(B = 500, v = 0.632) {
   sampfun <- function(n) replicate(B, sample(1L:n, floor(v * n), replace = FALSE))
-  list(method = paste0("Subsampling with ", sprintf("%1.1f", 100 * v, 2), "% data"), 
+  list(method = sprintf("Subsampling with %1.1f%% data", 100 * v), 
     sampler = sampfun)
 }
 
@@ -21,7 +21,7 @@ samplesplitting <- function(k = 5) {
     ret[1L:n] <- sample(1L:n)
     t(ret)
   }
-  list(method = paste0(k, "-fold sample splitting"), sampler = sampfun)
+  list(method = sprintf("%s-fold sample splitting", k), sampler = sampfun)
 }
 
 jackknife <- function(d = 1, maxrep = 5000) {
@@ -30,7 +30,7 @@ jackknife <- function(d = 1, maxrep = 5000) {
       stop("Maximum number of repetitions allowed exceeded. Reduce d!")
     apply(utils::combn(1L:n, d), 2, function(x) (1L:n)[-x])
   }
-  list(method = paste0("Leave-", d, "-out jackknife"), sampler = sampfun)
+  list(method = sprintf("Leave-%s-out jackknife", d), sampler = sampfun)
 } 
 
 splithalf <- function (B = 500)

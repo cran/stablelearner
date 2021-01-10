@@ -88,7 +88,7 @@ Philipp M, Zeileis A, Strobl C (2016).
   22nd International Conference on Computational Statistics (pp. 315--325). 
   The International Statistical Institute/International Association for
   Statistical Computing. Preprint available at
-  \url{http://EconPapers.RePEc.org/RePEc:inn:wpaper:2016-11}
+  \url{https://EconPapers.RePEc.org/RePEc:inn:wpaper:2016-11}
 }
 
 \seealso{\code{\link{plot.stabletree}}, \code{\link{as.stabletree}}, 

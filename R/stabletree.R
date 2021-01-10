@@ -52,7 +52,7 @@ stabletree <- function(x, data = NULL, sampler = subsampling, weights = NULL,
   } else n <- NROW(data)
 
   ## are weights supported?
-  wsup <- "weights" %in% formalArgs(as.character(call[[1L]]))
+  wsup <- "weights" %in% formalArgs(eval(call[[1L]], envir = env, enclos = parent.frame()))
   
   ## generate or adopt weights
   if(is.null(weights)) {

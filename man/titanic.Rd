@@ -38,7 +38,7 @@ A data frame containing 2207 observations on 11 variables.
 
 \details{
 
-The website \url{http://www.encyclopedia-titanica.org/} offers detailed 
+The website \url{https://www.encyclopedia-titanica.org/} offers detailed 
 information about passengers and crew members on the RMS Titanic. According to
 the website 1317 passengers and 890 crew member were abord.
 
@@ -51,14 +51,14 @@ a few regular passengers.
 
 \source{
   The complete list of persons on the RMS titanic was downloaded from 
-  \url{http://www.encyclopedia-titanica.org/} on April 5, 2016. The 
+  \url{https://www.encyclopedia-titanica.org/} on April 5, 2016. The 
   information given in \code{sibsp} and \code{parch} was adopoted from a data
-  set obtained from \url{http://biostat.mc.vanderbilt.edu/DataSets}.
+  set obtained from \url{https://hbiostat.org/data/}.
 }
 
 \references{
-  \url{http://www.encyclopedia-titanica.org/} and 
-  \url{http://biostat.mc.vanderbilt.edu/DataSets}.
+  \url{https://www.encyclopedia-titanica.org/} and 
+  \url{https://hbiostat.org/data/}.
 }
 
 \examples{
