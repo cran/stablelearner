@@ -19,8 +19,7 @@ stab_control <- function(B = 500, measure = list(tvdist, ccc),
     sampler <- get(sampler, mode = "function", envir = parent.frame())
   if (is.function(sampler)) {
     samp <- try(sampler(B = B, ...), silent = TRUE)
-    if (!inherits(samp, "try-error") && is.list(samp) && c("method", "sampler") %in% 
-        names(samp)) {
+    if (!inherits(samp, "try-error") && is.list(samp) && all(c("method", "sampler") %in% names(samp))) {
       sampler <- samp
     } else {
       sampler <- list(method = "User-defined", sampler = sampler)
@@ -36,8 +35,7 @@ stab_control <- function(B = 500, measure = list(tvdist, ccc),
       mfun <- get(mfun, mode = "function", envir = parent.frame())
     if (is.function(mfun)) {
       samp <- try(mfun(), silent = TRUE)
-      if (!inherits(samp, "try-error") && is.list(samp) && c("name", "measure") %in% 
-          names(samp)) {
+      if (!inherits(samp, "try-error") && is.list(samp) && all(c("name", "measure") %in% names(samp))) {
         mfun <- samp
       } else {
         mfun <- list(name = "User-defined", measure = mfun, classes = NULL, 
@@ -464,7 +462,7 @@ stability_internal <- function(x, learner, data, weights, control,
 accuracy <- function(x, measure = "kappa", na.action = na.exclude, 
                      applyfun = NULL, cores = NULL) {
   
-  if(class(x) == "stablelearner") x <- list(x)
+  if(inherits(x, "stablelearner")) x <- list(x)
   
   ## facilitate parallelization
   if (is.null(applyfun)) {
@@ -517,7 +515,7 @@ tuner <- function(method, tunerange, ...) {
 ## -----------------------------------------------------------------------------
 
 similarity_values <- function(x, reverse = TRUE)  {
-  if(class(x) == "stablelearner") {
+  if(inherits(x, "stablelearner")) {
     x <- list(x)
     class(x) <- "stablelearnerList"
   }
@@ -528,7 +526,7 @@ similarity_values <- function(x, reverse = TRUE)  {
 }
 
 reverse <- function(x, ...) {
-  if(class(x) == "stablelearner") x <- list(x)
+  if(inherits(x, "stablelearner")) x <- list(x)
   rval <- lapply(x, function(xx) {
     sval <- xx$sval
     rvalues <- sapply(seq(ncol(sval)), function(k) {

@@ -45,7 +45,7 @@
 }
 
 \details{
-  FIXME:
+  See Philipp et al. (2018).
 }
 
 \value{
@@ -73,9 +73,10 @@
 }
 
 \references{
-Philipp M, Rusch T, Hornik K, Strobl C (2018). Measuring the
-  \dQuote{Stability of Results from Supervised Statistical Learning}. Journal of
-  Computational and Graphical Statistics. Forthcoming
+Philipp M, Rusch T, Hornik K, Strobl C (2018).
+  \dQuote{Measuring the Stability of Results from Supervised Statistical Learning}.
+  \emph{Journal of Computational and Graphical Statistics}, \bold{27}(4), 685--700.
+  \doi{10.1080/10618600.2018.1473779}
 }
 
 \seealso{\code{\link{boxplot.stablelearnerList}}, \code{\link{summary.stablelearner}}}
@@ -101,7 +102,7 @@ stability(r1, weights = TRUE)
 ## using self-defined case-weights
 n <- nrow(iris)
 B <- 500
-w <- array(sample(c(0, 1), size = n*B*3, replace = TRUE), dim = c(n, B, 3))
+w <- array(sample(c(0, 1), size = n * B * 3, replace = TRUE), dim = c(n, B, 3))
 stability(r1, weights = w)
 
 ## assessing stability for a given data-generating process

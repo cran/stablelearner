@@ -1,3 +1,11 @@
+# stablelearner 0.1-4
+
+* Z takes over maintenance from MP.
+
+* Fix checks for `sampler` specifications where a logical of length 2 is
+  now correctly aggregated with `all()`.
+
+
 # stablelearner 0.1-3
 
 * Small improvements for CRAN checks.

@@ -144,8 +144,6 @@ image(s, names.diag = FALSE)
 image(s, names.arg = c("a", "b", "c", "d"))
 image(s, names.uline = FALSE)
 image(s, col = c("lightgreen", "darkred"))
-image(s, order.row = FALSE)
-image(s, order.col = FALSE)
 
 ## graphical cutpoint analysis, selecting variable by number and name
 ## with different numerical of break points
@@ -155,10 +153,10 @@ plot(s, select = "Petal.Width")
 plot(s, args.numeric = list(breaks = 40))
 
 # change labels of splits in complete data tree
-plot(s, select = 3, type.labels = "levels")
-plot(s, select = 3, type.labels = "nodeids")
-plot(s, select = 3, type.labels = "breaks")
-plot(s, select = 3, type.labels = "none")
+plot(s, select = 3, type.breaks = "levels")
+plot(s, select = 3, type.breaks = "nodeids")
+plot(s, select = 3, type.breaks = "breaks")
+plot(s, select = 3, type.breaks = "none")
 
 }
 

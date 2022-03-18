@@ -107,7 +107,11 @@ library("partykit")
 res <- ctree(Species ~ ., data = iris)
 
 ## less repetitions
-stability(res, control = stab_control(B = 250))
+stability(res, control = stab_control(B = 100))
+
+}
+
+\dontrun{
 
 ## change similarity measure
 stability(res, control = stab_control(measure = list(bdist)))

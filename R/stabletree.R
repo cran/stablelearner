@@ -172,7 +172,7 @@ stabletree <- function(x, data = NULL, sampler = subsampling, weights = NULL,
             rownames(ans) <- NULL
             ## sometimes the following fails for weird reasons, see also below
             tmp <- try(colnames(ans) <- x_levels[[n]], silent = TRUE)
-            if(class(tmp) == "try-error") class(ans) <- "try-error"
+            if(inherits(tmp, "try-error")) class(ans) <- "try-error"
             # colnames(ans) <- levels(mf[, n])
           }
         } else {
@@ -250,7 +250,7 @@ stabletree <- function(x, data = NULL, sampler = subsampling, weights = NULL,
   ## weird internal error handling
   ## if some errors occured within extract_split, extract_varid_, or extract_breaks
   ## drop these resamples from vs and br
-  tmp <- which(sapply(br, function(x) any(sapply(x, class) == "try-error")))
+  tmp <- which(sapply(br, function(x) any(sapply(x, function(z) class(z)[1L]) == "try-error")))
   if(length(tmp)) {
     vi_mat <- vi_mat[-tmp, ]
     br[tmp] <- NULL

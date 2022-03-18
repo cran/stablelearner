@@ -93,7 +93,7 @@ image(srf)
 plot(srf)
 
 ## build a RandomForest using party
-library(party)
+library("party")
 set.seed(2)
 cf_party <- cforest(Species ~ ., data = iris,
   control = cforest_unbiased(mtry = 2))
@@ -107,7 +107,7 @@ image(scf_party)
 plot(scf_party)
 
 ## build a cforest using partykit
-library(partykit)
+library("partykit")
 set.seed(3)
 cf_partykit <- cforest(Species ~ ., data = iris)
 
@@ -120,7 +120,7 @@ image(scf_partykit)
 plot(scf_partykit)
 
 ## build a random forest using ranger
-library(ranger)
+library("ranger")
 set.seed(4)
 rf_ranger <- ranger(Species ~ ., data = iris)
 

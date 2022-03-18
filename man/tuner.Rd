@@ -46,7 +46,9 @@ library("partykit")
 
 ## tuning cforest using different values of its tuning parameter mtry
 r <- tuner("cforest", tunerange = list(mtry = 1:4), formula = Species ~ ., data = iris)
-stability(r, control = stab_control(seed = 1234))
+
+## assess stability (with B = 10 for illustration to avoid excessive computation times)
+stability(r, control = stab_control(seed = 1234, B = 10))
 
 ## receive information about the range of tuning parameters
 attr(r, "range")
