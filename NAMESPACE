@@ -31,7 +31,6 @@ importClassesFrom("party", "RandomForest")
 export(
   ## stability assessment
   "stabletree",
-  ".stabEnv",
   "stability",
   "stab_control",
   "accuracy",
@@ -82,8 +81,6 @@ S3method("print", "summary.stablelearnerList")
 S3method("boxplot", "stablelearnerList")
 
 S3method("as.stabletree", "randomForest")
+S3method("as.stabletree", "RandomForest")
 S3method("as.stabletree", "cforest")
 S3method("as.stabletree", "ranger")
-
-exportMethods(as.stabletree)
-

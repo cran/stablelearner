@@ -5,9 +5,6 @@ as.stabletree <- function(x, ...) {
   UseMethod("as.stabletree")
 }
 
-### set S4 (for party's RandomForest), default is S3
-setGeneric("as.stabletree")
-
 ### function for extracting split information from trees (partykit::partysplit like list)
 extract_breaks <- function(x, x_names, x_classes, x_levels, x_nlevels, extract_split_fun, start_0 = TRUE) {
   sp <- extract_split_fun(x, x_names = x_names, x_classes = x_classes, x_levels = x_levels, x_nlevels = x_nlevels)
@@ -313,7 +310,7 @@ as.stabletree.RandomForest <- function(x, applyfun = NULL, cores = NULL, ...) {
   ## function to make a "BinaryTree" with no slots but the tree slots out of a
   ## tree; we need this so we can later extract the nodes via party::nodes
   as_BinaryTree <- function(tree) {
-    new("BinaryTree", tree = tree)
+    methods::new("BinaryTree", tree = tree)
   }
 
   ## function for extracting splits from trees (generate partykit::partysplit like list)
@@ -395,8 +392,6 @@ as.stabletree.RandomForest <- function(x, applyfun = NULL, cores = NULL, ...) {
   class(rval) <- "stabletree"
   return(rval)
 }
-
-setMethod("as.stabletree", "RandomForest", as.stabletree.RandomForest)
 
 ### as.stabletree.cforest (partykit)
 as.stabletree.cforest <- function(x, applyfun = NULL, cores = NULL, savetrees = FALSE, ...) {
