@@ -24,35 +24,35 @@
 }
 
 \arguments{
-  \item{x}{an object of class \code{\link{randomForest}},
-    \code{\link{RandomForest-class}}, \code{\link{cforest}},
-    or \code{\link{ranger}}.}
-  \item{applyfun}{a \code{\link{lapply}}-like function. The default is to
-    use \code{\link{lapply}} unless \code{cores} is specified in which
-    case \code{\link{mclapply}} is used (for multicore computations on
+  \item{x}{an object of class \code{\link[randomForest]{randomForest}},
+    \code{\link[party]{RandomForest-class}}, \code{\link[partykit]{cforest}},
+    or \code{\link[ranger]{ranger}}.}
+  \item{applyfun}{a \code{\link[base]{lapply}}-like function. The default is to
+    use \code{\link[base]{lapply}} unless \code{cores} is specified in which
+    case \code{\link[parallel]{mclapply}} is used (for multicore computations on
     platforms that support these).}
   \item{cores}{integer. The number of cores to use in multicore computations
-    using \code{\link{mclapply}} (see above).}
+    using \code{\link[parallel]{mclapply}} (see above).}
   \item{savetrees}{logical. If \code{TRUE}, trees of the forests are returned.}
   \item{\dots}{additional arguments (currently not used).}
 }
 
 \details{
-  Random forests fitted using \code{\link{randomForest}},
-  \code{\link{cforest}}, \code{\link{cforest}} or
-  \code{\link{ranger}} are coerced to \code{"stabletree"} objects.
+  Random forests fitted using \code{\link[randomForest]{randomForest}},
+  \code{\link[party]{cforest}}, \code{\link[partykit]{cforest}} or
+  \code{\link[ranger]{ranger}} are coerced to \code{"stabletree"} objects.
 
-  Note that when plotting a \code{\link{randomForest}} or
-  \code{\link{ranger}}, the gray areas of levels of a nominal variable
+  Note that when plotting a \code{\link[randomForest]{randomForest}} or
+  \code{\link[ranger]{ranger}}, the gray areas of levels of a nominal variable
   do not mimic exactly the same behavior as for classical \code{"stabletree"}
-  objects, due to \code{\link{randomForest}} and
-  \code{\link{ranger}}, not storing any information whether any
+  objects, due to \code{\link[randomForest]{randomForest}} and
+  \code{\link[ranger]{ranger}}, not storing any information whether any
   individuals were left fulfilling the splitting criterion in the subsample.
   Therefore, gray areas only indicate that this level of this variable has
   already been used in a split before in such a way that it could not be used
   for any further splits.
 
-  For \code{\link{ranger}}, interaction terms are (currently) not
+  For \code{\link[ranger]{ranger}}, interaction terms are (currently) not
   supported.
 }
 

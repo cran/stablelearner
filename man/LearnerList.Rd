@@ -13,7 +13,7 @@
 \details{
 Currently implemented learners are:
 \describe{
-  \item{ctree}{conditional inference trees using \code{\link{ctree}} from \pkg{partykit}.}
+  \item{ctree}{conditional inference trees using \code{\link[partykit]{ctree}} from \pkg{partykit}.}
   \item{rpart}{recursive partitioning using \code{rpart} from \pkg{rpart}.}
   \item{J48}{recursive partitioning using \code{J48} from \pkg{RWeka}.}
   \item{C5.0}{recursive partitioning using \code{C5.0} from \pkg{C50}.}

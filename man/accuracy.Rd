@@ -24,7 +24,7 @@
 	of a confusion matrix, \code{"kappa"} = \code{"diag"} corrected for agreement 
         by chance (default), \code{"rand"} = Rand index, and \code{"crand"} = 
 	Rand index corrected for agreemend by chance 
-	(see also \code{\link{classAgreement}}).}
+	(see also \code{\link[e1071]{classAgreement}}).}
   \item{na.action}{a function which indicates what should happen to the predictions 
 	of the results containing \code{NAs}. The default function is 
 	\code{\link{na.exclude}}.}

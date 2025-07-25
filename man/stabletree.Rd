@@ -21,22 +21,22 @@
 
 \arguments{
   \item{x}{fitted model object. Any tree-based model object that can be coerced
-    by \code{\link{as.party}} can be used provided that suitable methods
+    by \code{\link[partykit]{as.party}} can be used provided that suitable methods
     are provided.}
   \item{data}{an optional \code{data.frame}. By default the learning data from \code{x}
-    is used (if this can be inferred from the \code{\link{getCall}} of \code{x}.}
+    is used (if this can be inferred from the \code{\link[stats]{getCall}} of \code{x}.}
   \item{sampler}{a resampling (generating) function. Either this should be a function
     of \code{n} that returns a matrix or a sampler generator like
     \code{\link{subsampling}}.}
   \item{weights}{an optional matrix of dimension n * B that can be used to 
     weight the observations from the original learning data when the trees 
     are refitted. If \code{weight = NULL}, the \code{sampler} will be used.}
-  \item{applyfun}{a \code{\link{lapply}}-like function. The default is to use
-    \code{\link{lapply}} unless \code{cores} is specified in which case
-    \code{\link{mclapply}} is used (for multicore computations on platforms
+  \item{applyfun}{a \code{\link[base]{lapply}}-like function. The default is to use
+    \code{\link[base]{lapply}} unless \code{cores} is specified in which case
+    \code{\link[parallel]{mclapply}} is used (for multicore computations on platforms
     that support these).}
   \item{cores}{integer. The number of cores to use in multicore computations
-    using \code{\link{mclapply}} (see above).}
+    using \code{\link[parallel]{mclapply}} (see above).}
   \item{savetrees}{logical. If \code{TRUE}, trees based on resampled data sets are returned.}
   \item{\dots}{further arguments passed to \code{sampler}.}
 }
@@ -45,10 +45,10 @@
   The function \code{stabletree} assesses the stability of tree learners (i.e.,
   recursive partitioning methods) by refitting the tree to resampled versions
   of the learning data. By default, if \code{data = NULL}, the fitting call is
-  extracted by \code{\link{getCall}} to infer the learning data.
+  extracted by \code{\link[stats]{getCall}} to infer the learning data.
   Subsequently, the \code{sampler} generates \code{B} resampled versions
-  of the learning data, the tree is regrown with \code{\link{update}},
-  and (if necessary) coerced by \code{\link{as.party}}. For each
+  of the learning data, the tree is regrown with \code{\link[stats]{update}},
+  and (if necessary) coerced by \code{\link[partykit]{as.party}}. For each
   of the resampled trees it is queried and stored which variables are selected
   for splitting and what the selected cutpoints are.
 
@@ -92,7 +92,7 @@ Philipp M, Zeileis A, Strobl C (2016).
 }
 
 \seealso{\code{\link{plot.stabletree}}, \code{\link{as.stabletree}}, 
-  \code{\link{as.party}}}
+  \code{\link[partykit]{as.party}}}
 
 \examples{
 
