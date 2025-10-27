@@ -130,7 +130,13 @@ process_sampler <- function(n, sampler, evaluate, holdout, weights) {
       B <- ncol(ls1)
       ls1 <- matrix(train[ls1], ncol = B)
       if(sampler$method=="Split-half sampling") {
-        ls2 <- sapply(1L:B, function(b) setdiff(train, ls1[,b]))
+        ## uneven vs. even number of training observations "r"
+        r2 <- nrow(ls1) ## = floor(r/2)
+        ls2 <- if (r2 < r/2) {
+          sapply(1L:B, function(b) sample(setdiff(train, ls1[,b]), r2))
+        } else {
+          sapply(1L:B, function(b) setdiff(train, ls1[,b]))        
+        }
       } else {
         ls2 <- matrix(train[sampler$sampler(r)], ncol = B)
       }
@@ -339,6 +345,10 @@ stability_internal <- function(x, learner, data, weights, control,
         p1 <- prfun(x1, newdata = na.fun(es), yclass = yclass)
         p2 <- prfun(x2, newdata = na.fun(es), yclass = yclass)
         
+        ## sanity checks
+        if (length(p1) <= 1 || length(p2) <= 1) warning("One of the predictions has length 1, thus no variance.")
+        if (all(duplicated(p1)[-1L]) || all(duplicated(p2)[-1L])) warning("One of the predictions has no variance.")
+
         ## make matrix
         if(yclass %in% c("ordered", "factor") & NCOL(p1)<2) {
           p1 <- cbind(1-p1, p1)
@@ -371,7 +381,7 @@ stability_internal <- function(x, learner, data, weights, control,
         
         ## clear memory
         rm(x1, x2, p1, p2, ls1, ls2, es, ew)
-        invisible(gc(FALSE))
+        ## but do not trigger garbage collection manually: invisible(gc(FALSE))
 
       } else {
         stop("Nothing to predict.")

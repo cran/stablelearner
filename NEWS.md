@@ -1,3 +1,14 @@
+# stablelearner 0.1-7
+
+* Fix small bug in `splithalf()` sampling for `stability()`. In case of
+  an uneven number of observations in the learning sample some small overlap
+  in the two splitted halves would occur. This is avoided now by dropping
+  one random observation now and restricting both halves to be always of
+  the same size. Reported by Constantin Wiegand along with two further
+  small improvements: Warnings about lack of variance in predictions on
+  learning samples and avoiding manual triggering of the garbage collector.
+
+
 # stablelearner 0.1-6
 
 * Improve non-anchored links in manual pages (prompted by CRAN).

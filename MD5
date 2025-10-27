@@ -1,10 +1,10 @@
-0a5ce7bb852c247ceaf7947c2d0927b3 *DESCRIPTION
+ab9fe2a0b115c03db34c7ec03e9586de *DESCRIPTION
 c4f3e3fc866aa431b13bde51cf85d33f *NAMESPACE
-c0a7a097465d75162c98e8103b0ed070 *NEWS.md
+cfa35138d4b570827d1b5e8c0bee188f *NEWS.md
 132732fa95ad2f3cde93124bd55ae249 *R/learner.R
 5de6c3aa642c9790742e47bd48639685 *R/measures.R
 2cc3bc24aa2c8ed04ea476c95ff8d3b5 *R/sampler.R
-c5e76c79e84fe9823d3c9e47daa86bbc *R/stablelearner.R
+5b56813ad9d814c2509f1da181b0b3ea *R/stablelearner.R
 cbb3b4c5ea3158b523a59bec271cfcd3 *R/stabletree-coercion.R
 302e3596b6dae9b969c44a7b20f714f6 *R/stabletree.R
 6e9e6b4f1deb776e965a036a3b39f6d3 *R/sysdata.R
@@ -15,7 +15,7 @@ ba622547be199529984572f49c8dc823 *data/titanic.rda
 c7d131b3cb4bbb0521bf58d4fdf76e42 *inst/CITATION
 3d5b80a0cae84a8de6353d9b979991d9 *inst/doc/forests.R
 65a32f6c065334db8b3acf617a726356 *inst/doc/forests.Rmd
-29448978abfafa14c921a2fc7dc6151d *inst/doc/forests.html
+13c2c96f6984782f77e93f174af8b116 *inst/doc/forests.html
 152643efd252eb1daebbb5cd2165fbd8 *man/LearnerList.Rd
 b555fcb4d44e76b80ee4cf8ac4327a00 *man/accuracy.Rd
 86dd19cecbc27117dba3b737c694b183 *man/addLearner.Rd
