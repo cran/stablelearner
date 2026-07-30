@@ -12,7 +12,7 @@
 
 <meta name="author" content="Lennart Schneider, Achim Zeileis, Carolin Strobl" />
 
-<meta name="date" content="2025-10-27" />
+<meta name="date" content="2026-07-30" />
 
 <title>Descriptive and Graphical Analysis of the Variable and Cutpoint Selection inside Random Forests</title>
 
@@ -50,8 +50,9 @@ overflow: visible;
 }
 </style>
 <style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -62,7 +63,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
 { counter-reset: source-line 0; }
@@ -150,7 +151,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; }
 div.csl-bib-body { }
 div.csl-entry {
 clear: both;
-margin-bottom: 0em;
 }
 .hanging div.csl-entry {
 margin-left:2em;
@@ -364,7 +364,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h1 class="title toc-ignore">Descriptive and Graphical Analysis of the
 Variable and Cutpoint Selection inside Random Forests</h1>
 <h4 class="author">Lennart Schneider, Achim Zeileis, Carolin Strobl</h4>
-<h4 class="date">2025-10-27</h4>
+<h4 class="date">2026-07-30</h4>
 
 
 
@@ -385,10 +385,10 @@ called the <code>mtry</code> argument) is smaller than the total number
 of feature variables available. Random forests were introduced by <span class="citation">Breiman (2001)</span>.</p>
 <p>The <code>stablelearner</code> package was originally designed to
 provide functionality for assessing the stability of tree learners and
-other supervised statistical learners, both visually <span class="citation">(Philipp, Zeileis, and Strobl 2016)</span> and by means
-of computing similarity measures <span class="citation">(Philipp et al.
-2018)</span>, on the basis of repeatedly resampling the training data
-and refitting the learner.</p>
+other supervised statistical learners, both visually <span class="citation">(Philipp et al. 2016)</span> and by means of computing
+similarity measures <span class="citation">(Philipp et al. 2018)</span>,
+on the basis of repeatedly resampling the training data and refitting
+the learner.</p>
 <p>However, in this vignette we are interested in visualizing the
 variable and cutpoint selection of the trees within a <em>random
 forest</em>. Therefore, contrary to the original design of the
@@ -465,8 +465,8 @@ we only use a subsample of the data (500 persons):</p>
 <h3>2.1 Growing a random forest in <code>stablelearner</code></h3>
 <p>In our first approach, we want to grow a random forest directly in
 <code>stablelearner</code>. This is possible using conditional inference
-trees <span class="citation">(Hothorn, Hornik, and Zeileis 2006)</span>
-as base learners relying on the function <code>ctree()</code> of the
+trees <span class="citation">(Hothorn et al. 2006)</span> as base
+learners relying on the function <code>ctree()</code> of the
 <code>partykit</code> package. This procedure results in a forest equal
 to a random forest fitted via <code>partykit::cforest()</code>.</p>
 <p>To achieve this, we have to make sure that our initial
@@ -602,8 +602,8 @@ variable <code>duration</code> occurred between 0 and 30, but there
 appears to be high variance, indicating a smooth effect of this variable
 rather than a pattern with a distinct change-point.</p>
 <p>For a more detailed explanation of the different kinds of plots,
-Section 3 of <span class="citation">Philipp, Zeileis, and Strobl
-(2016)</span> is very helpful.</p>
+Section 3 of <span class="citation">Philipp et al. (2016)</span> is very
+helpful.</p>
 <p>To conclude, the summary table and different plots helped us to gain
 some insight into the variable and cutpoint selection of the 100 trees
 within our forest. Finally, in case we want to extract individual trees,
@@ -743,9 +743,7 @@ trees do not share. Note, however, that Breiman and Cutler did not
 intend the variable selection frequencies to be used as a measure of the
 relevance of the predictor variables, but have suggested a
 permutation-based variable importance measure for this purpose. For more
-details, see <span class="citation">Hothorn, Hornik, and Zeileis
-(2006)</span>, <span class="citation">Strobl et al. (2007)</span>, and
-<span class="citation">Strobl, Malley, and Tutz (2009)</span>.</p>
+details, see <span class="citation">Hothorn et al. (2006)</span>, <span class="citation">Strobl et al. (2007)</span>, and <span class="citation">Strobl et al. (2009)</span>.</p>
 <p>Finally, for forests fitted via <code>ranger::ranger()</code> (that
 also implements Breiman and Cutler’s original algorithm), the coercing
 procedure is again the same:</p>
@@ -766,15 +764,15 @@ of large random forests.</p>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2 class="unnumbered">References</h2>
-<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-Breiman2001" class="csl-entry">
 Breiman, L. 2001. <span>“Random Forests.”</span> <em>Machine
 Learning</em> 45 (1): 5–32. <a href="https://doi.org/10.1023/a:1010933404324">https://doi.org/10.1023/a:1010933404324</a>.
 </div>
 <div id="ref-Groemping2019" class="csl-entry">
-Grömping, U. 2019. <span>“South <span>German</span> Credit Data:
-<span>Correcting</span> a Widely Used Data Set.”</span> Beuth University
-of Applied Sciences Berlin, Department II.
+Grömping, U. 2019. <em>South <span>German</span> Credit Data:
+<span>Correcting</span> a Widely Used Data Set</em>. Beuth University of
+Applied Sciences Berlin, Department II.
 </div>
 <div id="ref-Hothorn2006" class="csl-entry">
 Hothorn, T., K. Hornik, and A. Zeileis. 2006. <span>“Unbiased Recursive
@@ -793,8 +791,8 @@ Philipp, M., A. Zeileis, and C. Strobl. 2016. <span>“A Toolkit for
 Stability Assessment of Tree-Based Learners.”</span> In <em>Proceedings
 of <span>COMPSTAT</span> 2016 – 22nd International Conference on
 Computational Statistics</em>, edited by A. Colubi, A. Blanco, and C.
-Gatu, 315–25. The International Statistical Institute/International
-Association for Statistical Computing.
+Gatu. The International Statistical Institute/International Association
+for Statistical Computing.
 </div>
 <div id="ref-Strobl2007" class="csl-entry">
 Strobl, C., A.-L. Boulesteix, A. Zeileis, and T. Hothorn. 2007.

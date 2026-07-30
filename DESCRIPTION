@@ -1,13 +1,13 @@
 Package: stablelearner
-Version: 0.1-7
-Date: 2025-10-27
+Version: 0.1-8
+Date: 2026-07-30
 Title: Stability Assessment of Statistical Learning Methods
-Authors@R: c(person(given = "Michel",  family = "Philipp",     role = "aut",           email = "michel.philipp.mp@gmail.com"),
-             person(given = "Carolin", family = "Strobl",      role = "aut",           email = "Carolin.Strobl@psychologie.uzh.ch"),
-             person(given = "Achim",   family = "Zeileis",     role = c("aut", "cre"), email = "Achim.Zeileis@R-project.org", comment = c(ORCID = "0000-0003-0918-3766")),
-             person(given = "Thomas",  family = "Rusch",       role = "aut",           email = "Thomas.Rusch@wu.ac.at"),
-             person(given = "Kurt",    family = "Hornik",      role = "aut",           email = "Kurt.Hornik@wu.ac.at", comment = c(ORCID = "0000-0003-4198-9911")),
-             person(given = "Lennart", family = "Schneider",   role = "aut",           email = "Lennart.Sch@web.de", comment = c(ORCID = "0000-0003-4152-5308")))
+Authors@R: c(person(given = "Michel",  family = "Philipp",   role = "aut",           email = "michel.philipp.mp@gmail.com"),
+             person(given = "Carolin", family = "Strobl",    role = "aut",           email = "Carolin.Strobl@psychologie.uzh.ch", comment = c(ORCID = "0000-0003-0952-3230")),
+             person(given = "Achim",   family = "Zeileis",   role = c("aut", "cre"), email = "Achim.Zeileis@R-project.org", comment = c(ORCID = "0000-0003-0918-3766")),
+             person(given = "Thomas",  family = "Rusch",     role = "aut",           email = "Thomas.Rusch@wu.ac.at", comment = c(ORCID = "0000-0002-7773-2096")),
+             person(given = "Kurt",    family = "Hornik",    role = "aut",           email = "Kurt.Hornik@R-project.org", comment = c(ORCID = "0000-0003-4198-9911")),
+             person(given = "Lennart", family = "Schneider", role = "aut",           email = "Lennart.Sch@web.de", comment = c(ORCID = "0000-0003-4152-5308")))
 Description: Graphical and computational methods that can be used to assess the 
   stability of results from supervised statistical learning.
 Depends: R (>= 3.0.0)
@@ -18,16 +18,18 @@ Suggests: utils, Formula, nnet, rpart, evtree, rchallenge, knitr,
 VignetteBuilder: knitr
 License: GPL-2 | GPL-3
 Encoding: UTF-8
+URL: https://zeileis.codeberg.page/stablelearner/
+BugReports: https://codeberg.org/zeileis/stablelearner/issues
 NeedsCompilation: no
-Packaged: 2025-10-27 21:58:55 UTC; zeileis
+Packaged: 2026-07-30 00:53:22 UTC; zeileis
 Author: Michel Philipp [aut],
-  Carolin Strobl [aut],
+  Carolin Strobl [aut] (ORCID: <https://orcid.org/0000-0003-0952-3230>),
   Achim Zeileis [aut, cre] (ORCID:
     <https://orcid.org/0000-0003-0918-3766>),
-  Thomas Rusch [aut],
+  Thomas Rusch [aut] (ORCID: <https://orcid.org/0000-0002-7773-2096>),
   Kurt Hornik [aut] (ORCID: <https://orcid.org/0000-0003-4198-9911>),
   Lennart Schneider [aut] (ORCID:
     <https://orcid.org/0000-0003-4152-5308>)
 Maintainer: Achim Zeileis <Achim.Zeileis@R-project.org>
 Repository: CRAN
-Date/Publication: 2025-10-27 22:50:02 UTC
+Date/Publication: 2026-07-30 11:30:02 UTC

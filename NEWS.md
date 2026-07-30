@@ -1,3 +1,12 @@
+# stablelearner 0.1-8
+
+* Code repository changed from R-Forge to Codeberg at:
+  <https://codeberg.org/zeileis/stablelearner/>
+
+* Added basic altdoc page with overview and documentation at:
+  <https://zeileis.codeberg.page/stablelearner/>
+
+
 # stablelearner 0.1-7
 
 * Fix small bug in `splithalf()` sampling for `stability()`. In case of

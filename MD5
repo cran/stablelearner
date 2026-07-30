@@ -1,6 +1,6 @@
-ab9fe2a0b115c03db34c7ec03e9586de *DESCRIPTION
+880a0bf06c9e0a9c0577414679d8ea45 *DESCRIPTION
 c4f3e3fc866aa431b13bde51cf85d33f *NAMESPACE
-cfa35138d4b570827d1b5e8c0bee188f *NEWS.md
+83f2659727565b501b73decaad4757fa *NEWS.md
 132732fa95ad2f3cde93124bd55ae249 *R/learner.R
 5de6c3aa642c9790742e47bd48639685 *R/measures.R
 2cc3bc24aa2c8ed04ea476c95ff8d3b5 *R/sampler.R
@@ -9,13 +9,14 @@ cbb3b4c5ea3158b523a59bec271cfcd3 *R/stabletree-coercion.R
 302e3596b6dae9b969c44a7b20f714f6 *R/stabletree.R
 6e9e6b4f1deb776e965a036a3b39f6d3 *R/sysdata.R
 441d628444be6265d60482f97a0bf028 *R/sysdata.rda
-b52aabe9a2757fc86742763db9dafc9b *build/partial.rdb
-9124cd2f3cf943d2f0cbbbd2dab28e91 *build/vignette.rds
+763ff5354e8c6b75828901aae93b3311 *README.md
+21c9401b8c07f38d762ade4612fc4ffe *build/partial.rdb
+19551da68c93ac65041f14af97e0d475 *build/vignette.rds
 ba622547be199529984572f49c8dc823 *data/titanic.rda
-c7d131b3cb4bbb0521bf58d4fdf76e42 *inst/CITATION
+ed12f4af60697265e62aafa1df6e32ac *inst/CITATION
 3d5b80a0cae84a8de6353d9b979991d9 *inst/doc/forests.R
 65a32f6c065334db8b3acf617a726356 *inst/doc/forests.Rmd
-13c2c96f6984782f77e93f174af8b116 *inst/doc/forests.html
+5ee62fa2c914e763bac127467bfa3779 *inst/doc/forests.html
 152643efd252eb1daebbb5cd2165fbd8 *man/LearnerList.Rd
 b555fcb4d44e76b80ee4cf8ac4327a00 *man/accuracy.Rd
 86dd19cecbc27117dba3b737c694b183 *man/addLearner.Rd

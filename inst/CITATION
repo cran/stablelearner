@@ -11,7 +11,7 @@ bibentry(bibtype = "InProceedings",
   isbn         = "978-90-73592-36-0",
   publisher    = "The International Statistical Institute/International Association for Statistical Computing",
   pages        = "315--325",
-  note         = "Preprint available at \\url{http://EconPapers.RePEc.org/RePEc:inn:wpaper:2016-11}",
+  note         = "Preprint available at \\url{https://EconPapers.RePEc.org/RePEc:inn:wpaper:2016-11}",
   header       = "To cite stablelearner/stabletree in publications use:"
 )
 
