@@ -1,3 +1,11 @@
+# stablelearner 0.1-9
+
+* Fix "donttest" examples, broken by `partykit` 1.3-0.
+
+* Import functions selectively, as needed, from `graphics` and `partykit`
+  rather than the entire namespaces.
+
+
 # stablelearner 0.1-8
 
 * Code repository changed from R-Forge to Codeberg at:

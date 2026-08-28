@@ -102,7 +102,7 @@ stabletree <- function(x, data = NULL, sampler = subsampling, weights = NULL,
       }
     }
     
-    if (!inherits(xi, "party")) xi <- partykit::as.party(xi)
+    if (!inherits(xi, "party")) xi <- as.party(xi)
     
     xi$data <- xi$data[0L, , drop = FALSE]
     xi$data <- xi$data[!(names(xi$data) %in% c("(weights)"))]

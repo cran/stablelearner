@@ -1,4 +1,12 @@
-import("partykit", "graphics")
+importFrom("partykit",
+           "as.party", "gettree", "is.terminal", "kids_node",
+           "node_party", "nodeapply", "nodeids", "split_node")
+
+importFrom("graphics",
+           "abline", "axis", "barplot", "barplot.default",
+           "box", "boxplot", "grid", "hist.default",
+           "image", "mtext", "par", "rect", "rug",
+           "strwidth", "text", "title")
 
 importFrom("e1071", 
            "classAgreement")

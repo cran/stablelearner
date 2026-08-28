@@ -436,7 +436,7 @@ as.stabletree.cforest <- function(x, applyfun = NULL, cores = NULL, savetrees = 
   }
 
   ## get trees of the forest
-  xx <- applyfun(seq_len(B), FUN = function(b) partykit::gettree(x, b))
+  xx <- applyfun(seq_len(B), FUN = function(b) gettree(x, b))
 
   ## extract names of all variables and omit response
   mf <- model.frame(tr, data = data)

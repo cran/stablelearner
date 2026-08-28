@@ -80,7 +80,7 @@
 
 \donttest{
 ## build a randomForest using randomForest
-library(randomForest)
+library("randomForest")
 set.seed(1)
 rf <- randomForest(Species ~ ., data = iris)
 
